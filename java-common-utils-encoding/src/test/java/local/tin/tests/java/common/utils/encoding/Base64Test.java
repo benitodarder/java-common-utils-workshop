@@ -8,12 +8,12 @@ import org.junit.Test;
  *
  * @author benitodarder
  */
-public class Bae64Test {
+public class Base64Test {
     
     private static final String SAMPLE_STRING_01 = "abcdef";
     
     @Test
-    public void can_decode_encoded_string() {
+    public void can_decode_encoded_string() throws Exception {
         
         String result = Base64.getInstance().decode(Base64.getInstance().encode(SAMPLE_STRING_01));
         
