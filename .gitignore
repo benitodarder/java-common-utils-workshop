@@ -21,3 +21,15 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/utils-file/target/
+/java-commons-utils-file/target/
+/java-common-utils-file/target/
+/utils-json/jackson-2/target/
+/utils-json/jackson-1/target/
+/utils-json/java-common-utils-json-jackson-1/target/
+/utils-json/java-common-utils-json-jackson-2/target/
+/java-common-utils-json/java-common-utils-json-jackson-1/target/
+/java-common-utils-json/java-common-utils-json-jackson-2/target/
+/java-common-utils-encoding/target/
+/**/target
+**/target
