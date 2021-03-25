@@ -229,7 +229,7 @@
     </build>
     <modules>
         <module>java-common-utils-file</module>
-        <module>java-common-utils-encoding</module>
         <module>java-common-utils-json</module>
+        <module>java-common-utils-encoding-crypto</module>
     </modules>
 </project>
