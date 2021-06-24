@@ -11,13 +11,14 @@ import java.util.List;
 public class Base64 {
 
 
-
-    public static final char[] CHAR_INDEXES_ENCODING
+    public static final char PADDING_CHAR = '=';
+    public static final char NULL_CHAR = '\u0000';
+    private static final char[] CHAR_INDEXES_ENCODING
             = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
                 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
                 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
                 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
-    public static final int[] CHAR_INDEXES_DECODING
+    private static final int[] CHAR_INDEXES_DECODING
             = {80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
                 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
                 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 62, 80, 80, 80, 0x3F,
@@ -27,8 +28,6 @@ public class Base64 {
                 80, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
                 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 80, 80, 80, 80, 80};
 
-    public static final char PADDING_CHAR = '=';
-    public static final char NULL_CHAR = '\u0000';
 
     private Base64() {
     }
@@ -82,14 +81,14 @@ public class Base64 {
         StringBuilder sourceAsString = new StringBuilder(source);
         int originalPaddingChars = getOriginalPaddingCount(sourceAsString);
         int totalPaddingChars = originalPaddingChars;
-        for (; sourceAsString.length() % 4 != 0;) {
+        while (sourceAsString.length() % 4 != 0) {
             totalPaddingChars++;
             sourceAsString.append(PADDING_CHAR);
         }
-        List<Byte> byteList = new ArrayList();
+        List<Byte> byteList = new ArrayList<>();
         for (int i = 0; i < sourceAsString.length(); i = i + 4) {
             int blockAsInteger = getDecodingBlockAsInteger(sourceAsString, i);
-            byteList.add((byte) ((blockAsInteger >>> 0x10)));
+            byteList.add((byte) (blockAsInteger >>> 0x10));
             byteList.add((byte) ((blockAsInteger >>> 0x08) & 0xFF));
             byteList.add((byte) (blockAsInteger & 0xFF));
         }

@@ -50,12 +50,7 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-        </dependency>  
-        <dependency>
-            <groupId>org.codehaus.sonar-plugins.java</groupId>
-            <artifactId>sonar-jacoco-listeners</artifactId>
-            <scope>test</scope>
-        </dependency>          
+        </dependency>           
     </dependencies>
     <build>
         <plugins>
@@ -66,7 +61,11 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>              
+            </plugin>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>             
         </plugins>
     </build>      
     <name>java-common-utils-json-jackson-1</name>

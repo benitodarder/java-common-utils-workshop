@@ -17,7 +17,7 @@ public class JSONMapper {
     private JSONMapper() {
     }
 
-    public synchronized static JSONMapper getInstance() {
+    public static synchronized JSONMapper getInstance() {
         if (mapper == null) {
             mapper = new ObjectMapper();
         }

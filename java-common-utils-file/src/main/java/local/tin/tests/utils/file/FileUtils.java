@@ -51,10 +51,12 @@ public class FileUtils {
      * @throws IOException
      */
     public Properties getPropertiesFile(String filePath) throws IOException {
-        InputStream fileInputStream = new FileInputStream(filePath);
-        Properties properties = new Properties();
-        properties.load(fileInputStream);
-        return properties;
+        try ( InputStream fileInputStream = new FileInputStream(filePath)) {
+            Properties properties = new Properties();
+            properties.load(fileInputStream);
+            return properties;
+        }
+
     }
 
     /**
@@ -86,14 +88,8 @@ public class FileUtils {
      * @throws java.io.IOException
      */
     public void saveStringAsFile(String filePath, String content) throws IOException {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(filePath));
+        try ( BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(content);
-        } finally {
-            if (writer != null) {
-                 writer.close();       
-            }
         }
 
     }

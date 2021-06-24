@@ -13,17 +13,17 @@
         <maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>   
         <maven.dependency.version>3.1.1</maven.dependency.version>   
         <maven.jar.plugin>3.1.1</maven.jar.plugin>   
-        <maven.shade.plugin>2.4.1</maven.shade.plugin>             
+        <maven.shade.plugin>2.4.1</maven.shade.plugin>     
+        <maven.surfire.plugin>2.22.0</maven.surfire.plugin>                
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Unit testing -->
         <hamcrest.version>1.3</hamcrest.version>
-        <jacoco.version>0.7.8</jacoco.version>
+        <jacoco.version>0.8.7</jacoco.version>            
         <junit.version>4.12</junit.version>        
         <mockito.version>1.10.19</mockito.version>              
         <persistence.api.version>1.0</persistence.api.version>                     
         <powermock.version>1.7.3</powermock.version>
-        <sonar.plugin.version>3.6.0.1398</sonar.plugin.version>
-        <sonar-jacoco-listeners.version>1.4</sonar-jacoco-listeners.version>      
+        <sonar.plugin.version>3.6.0.1398</sonar.plugin.version>  
         <!-- General dependenies -->
         <fasterxml.jackson.version>2.10.1</fasterxml.jackson.version>
         <fasterxml.jackson.mapper.version>2.9.8</fasterxml.jackson.mapper.version>        
@@ -88,11 +88,6 @@
                 <artifactId>powermock-reflect</artifactId>
                 <version>${powermock.version}</version>  
             </dependency>  
-            <dependency>
-                <groupId>org.codehaus.sonar-plugins.java</groupId>
-                <artifactId>sonar-jacoco-listeners</artifactId>
-                <version>${sonar-jacoco-listeners.version}</version>
-            </dependency> 
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-core-asl</artifactId>
@@ -185,13 +180,6 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.codehaus.sonar-plugins.java</groupId>
-                            <artifactId>sonar-jacoco-listeners</artifactId>
-                            <version>${sonar-jacoco-listeners.version}</version>
-                        </dependency>
-                    </dependencies>
                     <executions>
                         <execution>
                             <id>prepare-agent</id>
@@ -214,7 +202,7 @@
                             </goals>
                             <configuration>
                                 <dataFile>target/jacoco.exec</dataFile>
-                                <outputDirectory>target/jacoco-ut</outputDirectory>
+                                <outputDirectory>target/site/jacoco</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>
@@ -224,6 +212,11 @@
                         </systemPropertyVariables>
                     </configuration>
                 </plugin> 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surfire.plugin}</version>
+                </plugin>                  
             </plugins>             
         </pluginManagement>
     </build>
