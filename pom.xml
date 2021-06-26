@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>local.tin.tests</groupId>
     <artifactId>java-common-utils</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <properties>
         <!-- Project properties -->
         <java.version>1.7</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target> 
-        <maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>   
+        <maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>
         <maven.dependency.version>3.1.1</maven.dependency.version>   
         <maven.jar.plugin>3.1.1</maven.jar.plugin>   
         <maven.shade.plugin>2.4.1</maven.shade.plugin>     
@@ -143,34 +143,33 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${maven.assembly.plugin.version}</version>
-                    <configuration>
-                        <!-- get all project dependencies -->
-                        <descriptorRefs>
-                            <descriptorRef>jar-with-dependencies</descriptorRef>
-                        </descriptorRefs>
-                        <!-- MainClass in mainfest make a executable jar -->
-                        <archive>
-                            <manifest>
-                                <mainClass>${jar.main.class}</mainClass>
-                            </manifest>
-                        </archive>
-
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>make-assembly</id>
-                            <!-- bind to the packaging phase -->
-                            <phase>package</phase> 
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly.plugin.version}</version>
+                <configuration>
+                    <!-- get all project dependencies -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- MainClass in mainfest make a executable jar -->
+                    <archive>
+                        <manifest>
+                            <mainClass>${project.main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
@@ -225,5 +224,6 @@
         <module>java-common-utils-json</module>
         <module>java-common-utils-encoding-crypto</module>
         <module>java-common-utils-http</module>
+        <module>java-common-utils-use-cases</module>
     </modules>
 </project>

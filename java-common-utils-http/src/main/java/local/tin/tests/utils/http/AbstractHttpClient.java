@@ -8,11 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
 import local.tin.tests.utils.http.model.MultipartItem;
 import local.tin.tests.utils.http.utils.MultipartUtils;
+import local.tin.tests.utils.http.utils.StreamUtils;
 import local.tin.tests.utils.http.utils.URLConnectionFactory;
 import org.apache.log4j.Logger;
 
@@ -97,7 +97,7 @@ public abstract class AbstractHttpClient {
         return makeRequest(urlString, headers, POST_METHOD, body);
     }
 
-    private HttpResponseByteArray getResponseFromConnection(HttpURLConnection connection) {
+    private HttpResponseByteArray getResponseFromConnection(HttpURLConnection connection) throws HttpCommonException {
         byte[] result = new byte[0];
         InputStream inputStream = null;
         InputStream bodyStream = null;
@@ -147,10 +147,10 @@ public abstract class AbstractHttpClient {
         return new HttpResponseByteArray(responseCode, result, contentType);
     }
 
-    private InputStream getEfectiveResponseStream(HttpURLConnection connection, InputStream inputStream) throws IOException {
+    private InputStream getEfectiveResponseStream(HttpURLConnection connection, InputStream inputStream) throws HttpCommonException  {
         InputStream bodyStream;
         if (CONTENT_ENCODING_COMPRESSED.equals(connection.getContentEncoding())) {
-            bodyStream = new GZIPInputStream(inputStream);
+            bodyStream = StreamUtils.getInstance().getGZIPInputStream(inputStream);
         } else {
             bodyStream = inputStream;
         }
@@ -186,7 +186,7 @@ public abstract class AbstractHttpClient {
     private byte[] getStreamAsByteArray(InputStream inputStream) throws IOException {
         byte[] buffer = new byte[getBufferSize()];
         int n;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        ByteArrayOutputStream output = StreamUtils.getInstance().getByteArrayOutputStream();
         while ((n = inputStream.read(buffer)) != EOF_FLAG) {
             output.write(buffer, 0, n);
         }

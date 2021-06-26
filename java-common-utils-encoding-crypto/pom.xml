@@ -4,7 +4,7 @@
     <parent>
         <groupId>local.tin.tests</groupId>
         <artifactId>java-common-utils</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>java-common-utils-encoding-crypto</artifactId>
     <packaging>jar</packaging>

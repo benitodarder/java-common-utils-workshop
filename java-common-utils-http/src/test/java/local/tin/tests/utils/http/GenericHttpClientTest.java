@@ -1,6 +1,5 @@
 package local.tin.tests.utils.http;
 
-    
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +15,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
+import local.tin.tests.utils.http.utils.StreamUtils;
 import local.tin.tests.utils.http.utils.URLConnectionFactory;
 import org.apache.log4j.Logger;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -40,7 +40,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @author benito.darder
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({AbstractHttpClientWrapper.class, URLConnectionFactory.class, Logger.class, GZIPInputStream.class})
+@PrepareForTest({URLConnectionFactory.class, Logger.class, GZIPInputStream.class, StreamUtils.class})
 public class GenericHttpClientTest {
 
     private static final long SAMPLE_TIMESTAMP_MARKER = 1l;
@@ -49,10 +49,11 @@ public class GenericHttpClientTest {
     private static final String SAMPLE_HEADER_VALUE = "value";
     private static final String SAMPLE_HEADER_KEY = "key";
     private static final String SAMPLE_URL = "url";
-    private static Logger mockedLogger;
     private static final byte[] SAMPLE_BYTE_ARRAY = {1, 3, 7, 15, 31, 63, 127};
     private static final byte[] ANOTHER_SAMPLE_BYTE_ARRAY = {2, 4, 8, 16, 32, 64};
     private static URLConnectionFactory mockedURLConnectionFactory;
+    private static StreamUtils mockedStreamUtils;
+    private static Logger mockedLogger;
     private GenericHttpClient client;
     private InputStream mockedInputStream;
     private ByteArrayOutputStream mockedByteArrayOutputStream;
@@ -64,6 +65,7 @@ public class GenericHttpClientTest {
     public static void setUpClass() {
         mockedLogger = mock(Logger.class);
         mockedURLConnectionFactory = mock(URLConnectionFactory.class);
+        mockedStreamUtils = mock(StreamUtils.class);
     }
 
     @Before
@@ -72,6 +74,8 @@ public class GenericHttpClientTest {
         when(Logger.getLogger(AbstractHttpClient.class)).thenReturn(mockedLogger);
         PowerMockito.mockStatic(URLConnectionFactory.class);
         when(URLConnectionFactory.getInstance()).thenReturn(mockedURLConnectionFactory);
+        PowerMockito.mockStatic(StreamUtils.class);
+        when(StreamUtils.getInstance()).thenReturn(mockedStreamUtils);
         client = new GenericHttpClient();
         mockedHttpURLConnection = mock(HttpURLConnection.class);
         when(mockedURLConnectionFactory.getHttpURLConnection(SAMPLE_URL)).thenReturn(mockedHttpURLConnection);
@@ -115,7 +119,7 @@ public class GenericHttpClientTest {
 
     private void setByteArrayOutputStreamMocks() throws Exception {
         mockedByteArrayOutputStream = mock(ByteArrayOutputStream.class);
-        PowerMockito.whenNew(ByteArrayOutputStream.class).withNoArguments().thenReturn(mockedByteArrayOutputStream);
+        when(mockedStreamUtils.getByteArrayOutputStream()).thenReturn(mockedByteArrayOutputStream);
         when(mockedByteArrayOutputStream.toByteArray()).thenReturn(SAMPLE_BYTE_ARRAY);
     }
 
@@ -237,7 +241,7 @@ public class GenericHttpClientTest {
         when(mockedHttpURLConnection.getContentEncoding()).thenReturn(AbstractHttpClient.CONTENT_ENCODING_COMPRESSED);
         setInputStreamMocks();
         GZIPInputStream mockedGZIPInputStream = mock(GZIPInputStream.class);
-        PowerMockito.whenNew(GZIPInputStream.class).withArguments(mockedInputStream).thenReturn(mockedGZIPInputStream);
+        when(mockedStreamUtils.getGZIPInputStream(mockedInputStream)).thenReturn(mockedGZIPInputStream);
         when(mockedGZIPInputStream.read(any(byte[].class))).thenReturn(AbstractHttpClient.EOF_FLAG);
 
         client.makeGetRequest(SAMPLE_URL, null);
@@ -277,6 +281,5 @@ public class GenericHttpClientTest {
         when(mockedHttpURLConnection.getContentType()).thenReturn(CONTENT_TYPE);
         when(mockedHttpsURLConnection.getContentType()).thenReturn(CONTENT_TYPE);
     }
-    
-    
+
 }
