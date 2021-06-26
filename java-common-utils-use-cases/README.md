@@ -1,7 +1,7 @@
 # java-common-utils-use-cases
 
 * HttpClient:
-    - java -cp java-common-utils-use-cases-1.0-jar-with-dependencies.jar local.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>
+    - java -cp java-common-utils-use-cases-1.0-jar-with-dependencies.jar local.tin.tests.java.common.utils.use.cases.HttpClient \<Properties file\>
         * method=\<POST/GET\>
         * url=\<URL\>
         * body=\<Single line\>
