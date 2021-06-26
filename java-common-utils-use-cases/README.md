@@ -3,7 +3,7 @@
 * HttpClient:
     - java -cp java-common-utils-use-cases-1.0-jar-with-dependencies.jar local.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>
         * method=POST/GET
-        * url=<URL>
-        * body=<Single line>
-        * tls12=<true/false>
-        * headers=<Comma separated pairs of header name and value
+        * url=Url destination
+        * body=In a single line
+        * tls12=true/false
+        * headers=Comma separated pairs of header name and value
