@@ -121,33 +121,32 @@ public abstract class AbstractHttpClient {
                 bodyStream = getEfectiveResponseStream(connection, connection.getErrorStream());
                 if (bodyStream != null) {
                     result = getStreamAsByteArray(bodyStream);
+                } else {
+                    result = ioe.getMessage().getBytes();
                 }
             } catch (IOException ioee) {
-                LOGGER.error(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + ioee.getLocalizedMessage());
-                LOGGER.debug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + ioee.getLocalizedMessage(), ioee);
+                 logErrorAndDebug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR, ioee);
             }
         } finally {
             if (inputStream != bodyStream && bodyStream != null) {
                 try {
                     bodyStream.close();
                 } catch (IOException ex) {
-                    LOGGER.error(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + ex.getLocalizedMessage());
-                    LOGGER.debug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + ex.getLocalizedMessage(), ex);
+                    logErrorAndDebug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR, ex);
                 }
             }
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException ex) {
-                    LOGGER.error(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + ex.getLocalizedMessage());
-                    LOGGER.debug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + ex.getLocalizedMessage(), ex);
+                    logErrorAndDebug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR, ex);
                 }
             }
         }
         return new HttpResponseByteArray(responseCode, result, contentType);
     }
 
-    private InputStream getEfectiveResponseStream(HttpURLConnection connection, InputStream inputStream) throws HttpCommonException  {
+    private InputStream getEfectiveResponseStream(HttpURLConnection connection, InputStream inputStream) throws HttpCommonException {
         InputStream bodyStream;
         if (CONTENT_ENCODING_COMPRESSED.equals(connection.getContentEncoding())) {
             bodyStream = StreamUtils.getInstance().getGZIPInputStream(inputStream);
@@ -211,30 +210,13 @@ public abstract class AbstractHttpClient {
             httResponseByteArray = getResponseFromConnection(connection);
 
             LOGGER.debug("'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
-        } catch (Exception e) {
-            LOGGER.error(UNEXPECTED_IO_EXCEPTION + e.getLocalizedMessage());
-            LOGGER.debug(UNEXPECTED_IO_EXCEPTION + e.getLocalizedMessage(), e);
-            if (connection != null) {
-                try {
-                    httResponseByteArray = new HttpResponseByteArray(connection.getResponseCode(), e.getLocalizedMessage().getBytes(), null);
-                } catch (Exception ex) {
-                    LOGGER.error(UNEXPECTED_IO_EXCEPTION_RESPONSE_CODE + e.getLocalizedMessage());
-                    LOGGER.debug(UNEXPECTED_IO_EXCEPTION_RESPONSE_CODE + e.getLocalizedMessage(), ex);
-                }
-            }
-            throw new HttpCommonException(UNEXPECTED_IO_EXCEPTION, e);
+            return httResponseByteArray;
+        } catch (IOException | HttpCommonException e) {
+            logErrorAndDebug(UNEXPECTED_IO_EXCEPTION, e);
+            throw new HttpCommonException(e);
         } finally {
-            try {
-                if (httpParameterStream != null) {
-                    httpParameterStream.close();
-                }
-            } catch (Exception e) {
-                LOGGER.error(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + e.getLocalizedMessage());
-                LOGGER.debug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + e.getLocalizedMessage(), e);
-            }
-            LOGGER.debug(urlString + " " + method + " " + (System.currentTimeMillis() - t0) + "ms");
+            processFinally(httpParameterStream, urlString, method, t0);
         }
-        return httResponseByteArray;
     }
 
     public HttpResponseByteArray makeRequestMultipart(String urlString, Map<String, String> headers, Collection<MultipartItem> multipartItems) throws HttpCommonException {
@@ -282,30 +264,28 @@ public abstract class AbstractHttpClient {
             httpParameterStream.flush();
             httResponseByteArray = getResponseFromConnection(connection);
             LOGGER.debug("'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
-        } catch (Exception e) {
-            LOGGER.error(UNEXPECTED_IO_EXCEPTION + e.getLocalizedMessage());
-            LOGGER.debug(UNEXPECTED_IO_EXCEPTION + e.getLocalizedMessage(), e);
-            if (connection != null) {
-                try {
-                    httResponseByteArray = new HttpResponseByteArray(connection.getResponseCode(), e.getLocalizedMessage().getBytes(), null);
-                } catch (Exception ex) {
-                    LOGGER.error(UNEXPECTED_IO_EXCEPTION_RESPONSE_CODE + e.getLocalizedMessage());
-                    LOGGER.debug(UNEXPECTED_IO_EXCEPTION_RESPONSE_CODE + e.getLocalizedMessage(), ex);
-                }
-            }
+            return httResponseByteArray;
+        } catch (IOException | HttpCommonException e) {
+            logErrorAndDebug(UNEXPECTED_IO_EXCEPTION, e);
             throw new HttpCommonException(UNEXPECTED_IO_EXCEPTION, e);
         } finally {
-            try {
-                if (httpParameterStream != null) {
-                    httpParameterStream.close();
-                }
-            } catch (Exception e) {
-                LOGGER.error(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + e.getLocalizedMessage());
-                LOGGER.debug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + e.getLocalizedMessage(), e);
-            }
-            LOGGER.debug(urlString + " " + POST_METHOD + " " + (System.currentTimeMillis() - t0) + "ms");
+            processFinally(httpParameterStream, urlString, POST_METHOD, t0);
         }
-        return httResponseByteArray;
     }
 
+    private void processFinally(OutputStream httpParameterStream, String urlString, String method, long t0) {
+        try {
+            if (httpParameterStream != null) {
+                httpParameterStream.close();
+            }
+        } catch (IOException e) {
+            logErrorAndDebug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR, e);
+        }
+        LOGGER.debug(urlString + " " + method + " " + (System.currentTimeMillis() - t0) + "ms");
+    }
+
+    private void logErrorAndDebug(String prefix, Exception e) {
+        LOGGER.error(prefix + e.getLocalizedMessage());
+        LOGGER.debug(prefix + e.getLocalizedMessage(), e);
+    }    
 }

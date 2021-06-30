@@ -88,6 +88,7 @@ public class GenericHttpClientTest {
     @Test
     public void makeGetRequest_reads_contents_from_given_url() throws Exception {
         setInputStreamMocks();
+        setByteArrayOutputStreamMocks();
 
         client.makeGetRequest(SAMPLE_URL, null);
 
@@ -99,6 +100,7 @@ public class GenericHttpClientTest {
         setInputStreamMocks();
         Map<String, String> headers = new HashMap<>();
         headers.put(SAMPLE_HEADER_KEY, SAMPLE_HEADER_VALUE);
+        setByteArrayOutputStreamMocks();
 
         client.makeGetRequest(SAMPLE_URL, headers);
 
@@ -136,6 +138,7 @@ public class GenericHttpClientTest {
     @Test
     public void makePostRequest_reads_contents_from_given_url() throws Exception {
         setInputStreamMocks();
+        setByteArrayOutputStreamMocks();
 
         client.makePostRequest(SAMPLE_URL, null, null);
 
@@ -147,6 +150,7 @@ public class GenericHttpClientTest {
         setInputStreamMocks();
         Map<String, String> headers = new HashMap<>();
         headers.put(SAMPLE_HEADER_KEY, SAMPLE_HEADER_VALUE);
+        setByteArrayOutputStreamMocks();
 
         client.makePostRequest(SAMPLE_URL, headers, null);
 
@@ -189,6 +193,7 @@ public class GenericHttpClientTest {
     @Test
     public void makePostRequest_closes_input_stream() throws Exception {
         setInputStreamMocks();
+        setByteArrayOutputStreamMocks();
 
         client.makePostRequest(SAMPLE_URL, null, null);
 
@@ -198,6 +203,7 @@ public class GenericHttpClientTest {
     @Test
     public void makeGestRequest_closes_input_stream() throws Exception {
         setInputStreamMocks();
+        setByteArrayOutputStreamMocks();
 
         client.makeGetRequest(SAMPLE_URL, null);
 

@@ -45,7 +45,7 @@ public class HttpClient {
             if (properties.getProperty(PROPERTY_NAME_HEADERS) != null) {
                 String[] headersArray = properties.getProperty(PROPERTY_NAME_HEADERS).split(",");
                 for (int i = 0; i < (headersArray.length - 1); i++) {
-                    headers.put(headersArray[i], headersArray[i+1]);
+                    headers.put(headersArray[i], headersArray[i + 1]);
                 }
             }
             HttpResponseByteArray httpResponseByteArray = null;
@@ -59,7 +59,8 @@ public class HttpClient {
                 default:
                     LOGGER.warn("We should not reached this point...");
             }
-            LOGGER.info("Response:\n" + new String(httpResponseByteArray.getResponseAsByteArray()));
+            LOGGER.info("Response: " + new String(httpResponseByteArray.getResponseAsByteArray()));
+            LOGGER.info("Response Http code: " + httpResponseByteArray.getHttpResponseCode());
         }
     }
 
