@@ -47,6 +47,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({URLConnectionFactory.class, Logger.class, GZIPInputStream.class, StreamUtils.class})
 public class AbstractHttpClientTest {
 
+    private static final String SAMPLE_EXCEPTION_MESSAGE = "IOException";
     private static final long SAMPLE_TIMESTAMP_MARKER = 1l;
     private static final int DELTA = 3;
     private static final String CONTENT_TYPE = "content type";
@@ -125,7 +126,6 @@ public class AbstractHttpClientTest {
         assertThat(result.getResponseAsByteArray(), equalTo(SAMPLE_BYTE_ARRAY));
         assertThat(result.getMediaType(), equalTo(CONTENT_TYPE));
     }
-
 
     private void setByteArrayOutputStreamMocks() throws Exception {
         mockedByteArrayOutputStream = mock(ByteArrayOutputStream.class);
@@ -284,7 +284,6 @@ public class AbstractHttpClientTest {
         when(mockedInputStream.read(any(byte[].class))).thenReturn(AbstractHttpClient.EOF_FLAG);
         when(mockedHttpURLConnection.getContentType()).thenReturn(CONTENT_TYPE);
     }
-//
 
     private void setInputStreamMocks() throws IOException {
         mockedInputStream = mock(InputStream.class);
@@ -301,13 +300,13 @@ public class AbstractHttpClientTest {
         setByteArrayOutputStreamMocks();
         IOException mockedIOException = mock(IOException.class);
         when(mockedInputStream.read(any(byte[].class))).thenThrow(mockedIOException);
-        when(mockedIOException.getMessage()).thenReturn("IOException");
-        
+        when(mockedIOException.getMessage()).thenReturn(SAMPLE_EXCEPTION_MESSAGE);
+
         HttpResponseByteArray result = client.makeGetRequest(SAMPLE_URL, null);
 
-        assertThat(result.getResponseAsByteArray(), equalTo("IOException".getBytes()));
-    } 
-    
+        assertThat(result.getResponseAsByteArray(), equalTo(SAMPLE_EXCEPTION_MESSAGE.getBytes()));
+    }
+
     @Test(expected = HttpCommonException.class)
     public void makePostRequest_throws_httpcommonexception() throws Exception {
         setInputStreamMocks();
@@ -315,16 +314,46 @@ public class AbstractHttpClientTest {
         setOutputStreamMocks();
         IOException mockedIOException = mock(IOException.class);
         PowerMockito.doThrow(mockedIOException).when(mockedOutputStream).write(ANOTHER_SAMPLE_BYTE_ARRAY);
-        when(mockedIOException.getMessage()).thenReturn("IOException");        
-        
+        when(mockedIOException.getMessage()).thenReturn(SAMPLE_EXCEPTION_MESSAGE);
+
         HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
-    }  
+    }
 
     private void setHttpURLConnectionMocks() throws HttpCommonException, IOException {
         mockedHttpURLConnection = mock(HttpURLConnection.class);
         when(mockedURLConnectionFactory.getHttpURLConnection(SAMPLE_URL)).thenReturn(mockedHttpURLConnection);
         when(mockedHttpURLConnection.getResponseCode()).thenReturn(AbstractHttpClient.RESPONSE_CODE_SUCCESS);
 
+    }
+
+    @Test(expected = HttpCommonException.class)
+    public void makePostRequest_logs_error_and_debug_on_exception() throws Exception {
+        setInputStreamMocks();
+        setByteArrayOutputStreamMocks();
+        setOutputStreamMocks();
+        IOException mockedIOException = mock(IOException.class);
+        PowerMockito.doThrow(mockedIOException).when(mockedOutputStream).write(ANOTHER_SAMPLE_BYTE_ARRAY);
+        when(mockedIOException.getMessage()).thenReturn(SAMPLE_EXCEPTION_MESSAGE);
+
+        HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
+
+        verify(mockedLogger).debug(AbstractHttpClient.UNEXPECTED_EXCEPTION + SAMPLE_EXCEPTION_MESSAGE);
+        verify(mockedLogger).error(AbstractHttpClient.UNEXPECTED_EXCEPTION + SAMPLE_EXCEPTION_MESSAGE);
+    }
+
+    @Test
+    public void makePostRequest_logs_debug_io_exception_on_outputstrean_close() throws Exception {
+        setInputStreamMocks();
+        setByteArrayOutputStreamMocks();
+        setOutputStreamMocks();
+        IOException mockedIOException = mock(IOException.class);
+        PowerMockito.doThrow(mockedIOException).when(mockedOutputStream).close();
+        when(mockedIOException.getMessage()).thenReturn(SAMPLE_EXCEPTION_MESSAGE);
+        
+        HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
+
+        verify(mockedLogger).debug(AbstractHttpClient.UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + SAMPLE_EXCEPTION_MESSAGE, mockedIOException);
+        verify(mockedLogger).error(AbstractHttpClient.UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + SAMPLE_EXCEPTION_MESSAGE);
     }
 }
 

@@ -33,7 +33,7 @@ public abstract class AbstractHttpClient {
     public static final String POST_METHOD = "POST";
     public static final String UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR = "Unexpected IOException closing output stream: ";
     public static final String UNEXPECTED_IO_EXCEPTION_CLOSING_PRINT_WRITER = "Unexpected IOException closing PrintWriter: ";
-    public static final String UNEXPECTED_IO_EXCEPTION = "Unexpected IOException: ";
+    public static final String UNEXPECTED_EXCEPTION = "Unexpected Exception: ";
     public static final String UNEXPECTED_IO_EXCEPTION_RESPONSE_CODE = "Unexpected IOException retrieving response code after IOException: ";
     public static final String DEFAULT_CHARSET = "UTF-8";
     private static final Logger LOGGER = Logger.getLogger(AbstractHttpClient.class);
@@ -204,7 +204,6 @@ public abstract class AbstractHttpClient {
                 httpParameterStream = connection.getOutputStream();
                 httpParameterStream.write(body);
                 httpParameterStream.flush();
-                httpParameterStream.close();
             }
 
             httResponseByteArray = getResponseFromConnection(connection);
@@ -212,7 +211,7 @@ public abstract class AbstractHttpClient {
             LOGGER.debug("'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
             return httResponseByteArray;
         } catch (IOException | HttpCommonException e) {
-            logErrorAndDebug(UNEXPECTED_IO_EXCEPTION, e);
+            logErrorAndDebug(UNEXPECTED_EXCEPTION, e);
             throw new HttpCommonException(e);
         } finally {
             processFinally(httpParameterStream, urlString, method, t0);
@@ -266,8 +265,8 @@ public abstract class AbstractHttpClient {
             LOGGER.debug("'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
             return httResponseByteArray;
         } catch (IOException | HttpCommonException e) {
-            logErrorAndDebug(UNEXPECTED_IO_EXCEPTION, e);
-            throw new HttpCommonException(UNEXPECTED_IO_EXCEPTION, e);
+            logErrorAndDebug(UNEXPECTED_EXCEPTION, e);
+            throw new HttpCommonException(UNEXPECTED_EXCEPTION, e);
         } finally {
             processFinally(httpParameterStream, urlString, POST_METHOD, t0);
         }
@@ -285,7 +284,7 @@ public abstract class AbstractHttpClient {
     }
 
     private void logErrorAndDebug(String prefix, Exception e) {
-        LOGGER.error(prefix + e.getLocalizedMessage());
-        LOGGER.debug(prefix + e.getLocalizedMessage(), e);
+        LOGGER.error(prefix + e.getMessage());
+        LOGGER.debug(prefix + e.getMessage(), e);
     }    
 }
