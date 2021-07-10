@@ -225,5 +225,6 @@
         <module>java-common-utils-encoding-crypto</module>
         <module>java-common-utils-http</module>
         <module>java-common-utils-use-cases</module>
+        <module>java-common-utils-xml</module>
     </modules>
 </project>

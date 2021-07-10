@@ -7,3 +7,4 @@ General common utilities, as opening files, Base64 encoding, compression, date..
 * Encoding and cryptography
 * Http utils
 * Example use cases
+* XML basic utilities: JAXB marshaller, DOM builder
