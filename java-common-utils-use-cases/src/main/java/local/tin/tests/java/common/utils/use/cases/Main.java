@@ -17,6 +17,7 @@ public class Main {
         LOGGER.info("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  <Class and arguments>");
         LOGGER.info("Classes:");
         LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.EncryptFile <Secret key file> <Content file> <Output file>");
     }
 
 }
