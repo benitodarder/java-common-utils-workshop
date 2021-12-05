@@ -18,6 +18,7 @@ public class Main {
         LOGGER.info("Classes:");
         LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>");
         LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.EncryptFile <Secret key file> <Content file> <Output file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.DecryptFile <Secret key file> <encrypted content file> <Output file>");
     }
 
 }

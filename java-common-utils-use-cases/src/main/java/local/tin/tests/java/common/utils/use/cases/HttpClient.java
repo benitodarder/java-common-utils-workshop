@@ -35,6 +35,7 @@ public class HttpClient {
             LOGGER.error("\tbody=<Single line>");
             LOGGER.error("\ttls12=<true/false>");
             LOGGER.error("\theaders=<Comma separated pairs of header name and value");
+            System.exit(1);
         } else {
             Properties properties = FileUtils.getInstance().getPropertiesFile(args[0]);
             GenericHttpClient genericHttpClient = new GenericHttpClient();
