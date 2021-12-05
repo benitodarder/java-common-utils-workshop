@@ -226,5 +226,6 @@
         <module>java-common-utils-http</module>
         <module>java-common-utils-use-cases</module>
         <module>java-common-utils-xml</module>
+        <module>simple-aws-api</module>
     </modules>
 </project>
