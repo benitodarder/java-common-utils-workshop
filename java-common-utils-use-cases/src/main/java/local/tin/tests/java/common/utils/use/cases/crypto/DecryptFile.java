@@ -1,4 +1,4 @@
-package local.tin.tests.java.common.utils.use.cases;
+package local.tin.tests.java.common.utils.use.cases.crypto;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +22,7 @@ public class DecryptFile {
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, AESException {
         if (args.length != 3) {
-            LOGGER.error("Usage: java -cp java-common-utils-use-cases.<version>-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.DecryptFile <Secret key file> <Encrypted content file> <Output file>");
+            LOGGER.error("Usage: java -cp java-common-utils-use-cases.<version>-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.crypto.DecryptFile <Secret key file> <Encrypted content file> <Output file>");
             System.exit(1);
         } else {
             File secretKeyFile = new File(args[0]);

@@ -1,4 +1,4 @@
-package local.tin.tests.java.common.utils.use.cases;
+package local.tin.tests.java.common.utils.use.cases.http;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class HttpClient {
      */
     public static void main(String[] args) throws IOException, HttpCommonException {
         if (args.length != 1) {
-            LOGGER.error("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>");
+            LOGGER.error("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.http.HttpClient <Properties file>");
             LOGGER.error("Properties file:");
             LOGGER.error("\tmethod=POST/GET");
             LOGGER.error("\turl=<URL>");

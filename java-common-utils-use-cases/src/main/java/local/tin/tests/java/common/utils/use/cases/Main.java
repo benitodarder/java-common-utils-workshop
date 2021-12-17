@@ -16,9 +16,10 @@ public class Main {
     public static void main(String[] args) {
         LOGGER.info("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  <Class and arguments>");
         LOGGER.info("Classes:");
-        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>");
-        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.EncryptFile <Secret key file> <Content file> <Output file>");
-        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.DecryptFile <Secret key file> <encrypted content file> <Output file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.http.HttpClient <Properties file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.crypto.EncryptFile <Secret key file> <Content file> <Output file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.crypto.DecryptFile <Secret key file> <encrypted content file> <Output file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.aws.iam.ListAccessKeys <Properties file>");
     }
 
 }
