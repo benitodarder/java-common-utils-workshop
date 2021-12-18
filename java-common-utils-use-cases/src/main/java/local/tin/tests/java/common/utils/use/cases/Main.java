@@ -20,6 +20,8 @@ public class Main {
         LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.crypto.EncryptFile <Secret key file> <Content file> <Output file>");
         LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.crypto.DecryptFile <Secret key file> <encrypted content file> <Output file>");
         LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.aws.iam.ListAccessKeys <Properties file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.aws.s3.GetObject <Properties file>");
+        LOGGER.info("\tlocal.tin.tests.java.common.utils.use.cases.aws.s3.PutObject <Properties file>");
     }
 
 }

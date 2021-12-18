@@ -26,7 +26,7 @@ public class ListAccessKeys {
      */
     public static void main(String[] args) throws IOException, HttpCommonException, IAMException {
         if (args.length != 1) {
-            LOGGER.error("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.HttpClient <Properties file>");
+            LOGGER.error("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.aws.iam.ListAccessKeys <Properties file>");
             LOGGER.error("Properties file:");
             LOGGER.error("\taccess.key=<Access key id.>");
             LOGGER.error("\tsecret.key=<Secret key>");
