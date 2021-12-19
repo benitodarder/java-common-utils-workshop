@@ -3,15 +3,11 @@ package local.tin.tests.java.common.utils.use.cases.aws.s3;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import local.tin.tests.java.common.utils.use.cases.aws.iam.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Properties;
-import local.tin.tests.utils.aws.api.model.Request;
-import local.tin.tests.utils.aws.api.model.iam.AccessKey;
 import local.tin.tests.utils.aws.api.model.iam.IAMException;
 import local.tin.tests.utils.aws.api.model.s3.S3Exception;
 import local.tin.tests.utils.aws.api.model.s3.S3Request;
@@ -33,6 +29,10 @@ public class GetObject {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
+     * @throws local.tin.tests.utils.http.model.HttpCommonException
+     * @throws local.tin.tests.utils.aws.api.model.iam.IAMException
+     * @throws local.tin.tests.utils.aws.api.model.s3.S3Exception
      */
     public static void main(String[] args) throws IOException, HttpCommonException, IAMException, S3Exception {
         if (args.length != 1) {
