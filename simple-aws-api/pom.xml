@@ -91,6 +91,11 @@
                 <version>${powermock.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito-common</artifactId>
+                <version>${powermock.version}</version>
+            </dependency>            
+            <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
                 <version>${amazon.sdk.version}</version>
