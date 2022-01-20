@@ -8,7 +8,8 @@ import local.tin.tests.utils.file.FileUtils;
 import local.tin.tests.utils.http.GenericHttpClient;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,20 +22,20 @@ public class HttpClient {
     public static final String PROPERTY_NAME_BODY = "body";
     public static final String PROPERTY_NAME_TLS_12 = "tls12";
     public static final String PROPERTY_NAME_HEADERS = "headers";
-    private static final Logger LOGGER = Logger.getLogger(HttpClient.class);
+    private static final Logger LOGGER = Logger.getLogger(HttpClient.class.getName());
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, HttpCommonException {
         if (args.length != 1) {
-            LOGGER.error("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.http.HttpClient <Properties file>");
-            LOGGER.error("Properties file:");
-            LOGGER.error("\tmethod=POST/GET");
-            LOGGER.error("\turl=<URL>");
-            LOGGER.error("\tbody=<Single line>");
-            LOGGER.error("\ttls12=<true/false>");
-            LOGGER.error("\theaders=<Comma separated pairs of header name and value");
+            LOGGER.log(Level.SEVERE, "Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.http.HttpClient <Properties file>");
+            LOGGER.log(Level.SEVERE, "Properties file:");
+            LOGGER.log(Level.SEVERE, "\tmethod=POST/GET");
+            LOGGER.log(Level.SEVERE, "\turl=<URL>");
+            LOGGER.log(Level.SEVERE, "\tbody=<Single line>");
+            LOGGER.log(Level.SEVERE, "\ttls12=<true/false>");
+            LOGGER.log(Level.SEVERE, "\theaders=<Comma separated pairs of header name and value");
             System.exit(1);
         } else {
             Properties properties = FileUtils.getInstance().getPropertiesFile(args[0]);
@@ -58,10 +59,10 @@ public class HttpClient {
                     httpResponseByteArray = genericHttpClient.makePostRequest(properties.getProperty(PROPERTY_NAME_URL), headers, properties.getProperty(PROPERTY_NAME_BODY).getBytes());
                     break;
                 default:
-                    LOGGER.warn("We should not reached this point...");
+                    LOGGER.log(Level.WARNING, "We should not reached this point...");
             }
-            LOGGER.info("Response: " + new String(httpResponseByteArray.getResponseAsByteArray()));
-            LOGGER.info("Response Http code: " + httpResponseByteArray.getHttpResponseCode());
+             LOGGER.log(Level.INFO, "Response: {0}", new String(httpResponseByteArray.getResponseAsByteArray()));
+             LOGGER.log(Level.INFO, "Response Http code: {0}", httpResponseByteArray.getHttpResponseCode());
         }
     }
 

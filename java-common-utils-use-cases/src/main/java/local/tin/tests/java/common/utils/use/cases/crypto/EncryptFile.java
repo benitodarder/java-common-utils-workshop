@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import local.tin.tests.java.common.utils.crypto.AESException;
 import local.tin.tests.java.common.utils.crypto.AESUtils;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,14 +16,14 @@ import org.apache.log4j.Logger;
  */
 public class EncryptFile {
 
-    private static final Logger LOGGER = Logger.getLogger(EncryptFile.class);
+    private static final Logger LOGGER = Logger.getLogger(EncryptFile.class.getName());
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, AESException {
         if (args.length != 3) {
-            LOGGER.error("Usage: java -cp java-common-utils-use-cases.<version>-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.crypto.EncryptFile <Secret key file> <Content file> <Output file>");
+            LOGGER.log(Level.SEVERE, "Usage: java -cp java-common-utils-use-cases.<version>-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.crypto.EncryptFile <Secret key file> <Content file> <Output file>");
             System.exit(1);
         } else {
             File secretKeyFile = new File(args[0]);
@@ -33,7 +34,7 @@ public class EncryptFile {
             File compressedFile = new File(args[2]);
             FileOutputStream fileOutputStream = new FileOutputStream(compressedFile);
             fileOutputStream.write(compressedContent);
-            LOGGER.info("Encryption done...");
+             LOGGER.log(Level.INFO, "Encryption done...");
         }
     }
 
