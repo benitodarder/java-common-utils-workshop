@@ -1,6 +1,7 @@
 package local.tin.tests.java.common.utils.use.cases;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -8,7 +9,7 @@ import org.apache.log4j.Logger;
  */
 public class Main {
 
-    private static final Logger LOGGER = Logger.getLogger(Main.class);
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     /**
      * @param args the command line arguments
