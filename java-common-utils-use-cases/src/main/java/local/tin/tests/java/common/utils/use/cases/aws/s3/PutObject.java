@@ -3,19 +3,16 @@ package local.tin.tests.java.common.utils.use.cases.aws.s3;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import local.tin.tests.java.common.utils.use.cases.aws.iam.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
-import local.tin.tests.utils.aws.api.model.Request;
-import local.tin.tests.utils.aws.api.model.iam.AccessKey;
 import local.tin.tests.utils.aws.api.model.iam.IAMException;
 import local.tin.tests.utils.aws.api.model.s3.S3Exception;
 import local.tin.tests.utils.aws.api.model.s3.S3Request;
 import local.tin.tests.utils.aws.api.model.s3.S3Response;
 import local.tin.tests.utils.file.FileUtils;
 import local.tin.tests.utils.http.model.HttpCommonException;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,22 +23,26 @@ public class PutObject {
     public static final String PROPERTY_ACCESSKEY = "access.key";
     public static final String PROPERTY_SECRETKEY = "secret.key";
     public static final String PROPERTY_REGION = "region";
-    private static final Logger LOGGER = Logger.getLogger(PutObject.class);
+    private static final Logger LOGGER = Logger.getLogger(PutObject.class.getName());
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
+     * @throws local.tin.tests.utils.http.model.HttpCommonException
+     * @throws local.tin.tests.utils.aws.api.model.iam.IAMException
+     * @throws local.tin.tests.utils.aws.api.model.s3.S3Exception
      */
     public static void main(String[] args) throws IOException, HttpCommonException, IAMException, S3Exception {
         if (args.length != 1) {
-            LOGGER.error("Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.aws.s3.PutObject <Properties file>");
-            LOGGER.error("Properties file:");
-            LOGGER.error("\taccess.key=<Access key id.>");
-            LOGGER.error("\tsecret.key=<Secret key>");
-            LOGGER.error("\tregion=<Region>");
-            LOGGER.error("\tbucket.name=<Bucket name>");
-            LOGGER.error("\tobject.key=<Object key>");
-            LOGGER.error("\tfile.path=<File path to upload>");
-            LOGGER.error("\ttags=<Comma separated tag/value list>");
+            LOGGER.log(Level.SEVERE, "Usage: java -cp java-common-utils-use-cases.1.0-jar-with-dependencies.jar  local.tin.tests.java.common.utils.use.cases.aws.s3.PutObject <Properties file>");
+            LOGGER.log(Level.SEVERE, "Properties file:");
+            LOGGER.log(Level.SEVERE, "\taccess.key=<Access key id.>");
+            LOGGER.log(Level.SEVERE, "\tsecret.key=<Secret key>");
+            LOGGER.log(Level.SEVERE, "\tregion=<Region>");
+            LOGGER.log(Level.SEVERE, "\tbucket.name=<Bucket name>");
+            LOGGER.log(Level.SEVERE, "\tobject.key=<Object key>");
+            LOGGER.log(Level.SEVERE, "\tfile.path=<File path to upload>");
+            LOGGER.log(Level.SEVERE, "\ttags=<Comma separated tag/value list>");
             System.exit(1);
         } else {
             Properties properties = FileUtils.getInstance().getPropertiesFile(args[0]);
@@ -54,13 +55,13 @@ public class PutObject {
             request.setKey((String) properties.get("object.key"));
             request.setTimestamp(System.currentTimeMillis());
             if (properties.get("tags") != null) {
-                String[] tagsAsList = ((String)properties.get("tags")).split(",");
+                String[] tagsAsList = ((String) properties.get("tags")).split(",");
                 for (int i = 0; i < tagsAsList.length - 2; i = i + 2) {
-                    request.getTags().put(tagsAsList[i], tagsAsList[i+1]);
+                    request.getTags().put(tagsAsList[i], tagsAsList[i + 1]);
                 }
             }
             S3Response s3Response = local.tin.tests.utils.aws.api.s3.PutObject.getInstance().getResult(request);
-            LOGGER.info("AWS Response: " + s3Response.getMessage());
+            LOGGER.log(Level.INFO, "AWS Response: {0}", s3Response.getMessage());
         }
     }
 
@@ -74,7 +75,9 @@ public class PutObject {
             fileInputStream.read(byteArray);
             return byteArray;
         } finally {
-            fileInputStream.close();
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
 
         }
     }

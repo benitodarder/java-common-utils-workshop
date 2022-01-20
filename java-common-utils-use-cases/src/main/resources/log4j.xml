@@ -10,7 +10,7 @@
     </appender> 
 
     <root> 
-        <priority value ="info" /> 
+        <priority value ="error" /> 
         <appender-ref ref="raw_console" /> 
     </root>
   

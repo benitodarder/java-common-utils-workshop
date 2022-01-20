@@ -1,6 +1,6 @@
 # java-common-utils-use-cases
 
-* Alternate logging properties configuration: -Djava.util.logging.config.file=<File location>
+* Alternate logging properties configuration: -Djava.util.logging.config.file=\<File location\>
 * HttpClient:
     - java -cp java-common-utils-use-cases-1.0-jar-with-dependencies.jar local.tin.tests.java.common.utils.use.cases.HttpClient \<Properties file\>
         * method=\<POST/GET\>
