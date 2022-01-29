@@ -13,6 +13,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -21,7 +23,6 @@ import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
 import local.tin.tests.utils.http.utils.StreamUtils;
 import local.tin.tests.utils.http.utils.URLConnectionFactory;
-import org.apache.log4j.Logger;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
@@ -30,8 +31,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -44,7 +47,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @author benito.darder
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({URLConnectionFactory.class, Logger.class, GZIPInputStream.class, StreamUtils.class})
+@PrepareForTest({URLConnectionFactory.class, GZIPInputStream.class, StreamUtils.class})
 public class AbstractHttpClientTest {
 
     private static final String SAMPLE_EXCEPTION_MESSAGE = "IOException";
@@ -57,7 +60,6 @@ public class AbstractHttpClientTest {
     private static final byte[] SAMPLE_BYTE_ARRAY = {1, 3, 7, 15, 31, 63, 127};
     private static final byte[] ANOTHER_SAMPLE_BYTE_ARRAY = {2, 4, 8, 16, 32, 64};
     private static URLConnectionFactory mockedURLConnectionFactory;
-    private static Logger mockedLogger;
     private static StreamUtils mockedStreamUtils;
     private AbstractHttpClient client;
     private InputStream mockedInputStream;
@@ -68,15 +70,12 @@ public class AbstractHttpClientTest {
 
     @BeforeClass
     public static void setUpClass() {
-        mockedLogger = mock(Logger.class);
         mockedURLConnectionFactory = mock(URLConnectionFactory.class);
         mockedStreamUtils = mock(StreamUtils.class);
     }
 
     @Before
     public void setUp() throws Exception {
-        PowerMockito.mockStatic(Logger.class);
-        when(Logger.getLogger(AbstractHttpClient.class)).thenReturn(mockedLogger);
         PowerMockito.mockStatic(URLConnectionFactory.class);
         when(URLConnectionFactory.getInstance()).thenReturn(mockedURLConnectionFactory);
         PowerMockito.mockStatic(StreamUtils.class);
@@ -227,26 +226,6 @@ public class AbstractHttpClientTest {
         verify(mockedOutputStream, atLeastOnce()).close();
     }
 
-    @Test
-    public void makePostRequest_logs_debug_mode() throws Exception {
-        setInputStreamMocks();
-        setByteArrayOutputStreamMocks();
-        setOutputStreamMocks();
-
-        HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
-
-        verify(mockedLogger, atLeastOnce()).debug(anyString());
-    }
-
-    @Test
-    public void makeGetRequest_logs_debug_mode() throws Exception {
-        setInputStreamMocks();
-        setByteArrayOutputStreamMocks();
-
-        HttpResponseByteArray result = client.makeGetRequest(SAMPLE_URL, null);
-
-        verify(mockedLogger, atLeastOnce()).debug(anyString());
-    }
 
     @Test
     public void makeGetRequest_expands_compressed_response() throws Exception {
@@ -337,24 +316,9 @@ public class AbstractHttpClientTest {
 
         HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
 
-        verify(mockedLogger).debug(AbstractHttpClient.UNEXPECTED_EXCEPTION + SAMPLE_EXCEPTION_MESSAGE);
-        verify(mockedLogger).error(AbstractHttpClient.UNEXPECTED_EXCEPTION + SAMPLE_EXCEPTION_MESSAGE);
     }
 
-    @Test
-    public void makePostRequest_logs_debug_io_exception_on_outputstrean_close() throws Exception {
-        setInputStreamMocks();
-        setByteArrayOutputStreamMocks();
-        setOutputStreamMocks();
-        IOException mockedIOException = mock(IOException.class);
-        PowerMockito.doThrow(mockedIOException).when(mockedOutputStream).close();
-        when(mockedIOException.getMessage()).thenReturn(SAMPLE_EXCEPTION_MESSAGE);
-        
-        HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
 
-        verify(mockedLogger).debug(AbstractHttpClient.UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + SAMPLE_EXCEPTION_MESSAGE, mockedIOException);
-        verify(mockedLogger).error(AbstractHttpClient.UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR + SAMPLE_EXCEPTION_MESSAGE);
-    }
 }
 
 class AbstractHttpClientWrapper extends AbstractHttpClient {

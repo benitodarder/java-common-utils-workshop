@@ -8,13 +8,15 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
 import local.tin.tests.utils.http.model.MultipartItem;
 import local.tin.tests.utils.http.utils.MultipartUtils;
 import local.tin.tests.utils.http.utils.StreamUtils;
 import local.tin.tests.utils.http.utils.URLConnectionFactory;
-import org.apache.log4j.Logger;
+
 
 /**
  *
@@ -36,7 +38,7 @@ public abstract class AbstractHttpClient {
     public static final String UNEXPECTED_EXCEPTION = "Unexpected Exception: ";
     public static final String UNEXPECTED_IO_EXCEPTION_RESPONSE_CODE = "Unexpected IOException retrieving response code after IOException: ";
     public static final String DEFAULT_CHARSET = "UTF-8";
-    private static final Logger LOGGER = Logger.getLogger(AbstractHttpClient.class);
+    private static final Logger LOGGER = Logger.getLogger(AbstractHttpClient.class.getName());
     private final boolean tls12Enabled;
     private int bufferSize = DEFAULT_BUFFER_SIZE;
 
@@ -208,7 +210,7 @@ public abstract class AbstractHttpClient {
 
             httResponseByteArray = getResponseFromConnection(connection);
 
-            LOGGER.debug("'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
+            LOGGER.log(Level.FINE,"'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
             return httResponseByteArray;
         } catch (IOException | HttpCommonException e) {
             logErrorAndDebug(UNEXPECTED_EXCEPTION, e);
@@ -262,7 +264,7 @@ public abstract class AbstractHttpClient {
             httpParameterStream.write(System.lineSeparator().getBytes());
             httpParameterStream.flush();
             httResponseByteArray = getResponseFromConnection(connection);
-            LOGGER.debug("'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
+            LOGGER.log(Level.FINE,"'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getMediaType());
             return httResponseByteArray;
         } catch (IOException | HttpCommonException e) {
             logErrorAndDebug(UNEXPECTED_EXCEPTION, e);
@@ -280,11 +282,11 @@ public abstract class AbstractHttpClient {
         } catch (IOException e) {
             logErrorAndDebug(UNEXPECTED_IO_EXCEPTION_CLOSING_OUTPUT_STR, e);
         }
-        LOGGER.debug(urlString + " " + method + " " + (System.currentTimeMillis() - t0) + "ms");
+        LOGGER.log(Level.FINE,urlString + " " + method + " " + (System.currentTimeMillis() - t0) + "ms");
     }
 
     private void logErrorAndDebug(String prefix, Exception e) {
-        LOGGER.error(prefix + e.getMessage());
-        LOGGER.debug(prefix + e.getMessage(), e);
+        LOGGER.log(Level.SEVERE,prefix + e.getMessage());
+        LOGGER.log(Level.FINE,prefix + e.getMessage(), e);
     }    
 }

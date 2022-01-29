@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import javax.net.ssl.HttpsURLConnection;
 import local.tin.tests.utils.http.model.HttpCommonException;
-import org.apache.log4j.Logger;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
