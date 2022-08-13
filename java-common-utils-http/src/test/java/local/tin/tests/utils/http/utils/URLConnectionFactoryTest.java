@@ -10,6 +10,7 @@ import local.tin.tests.utils.http.model.HttpCommonException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.mock;
@@ -24,36 +25,29 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @author tubdapmi
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({URL.class, URLConnectionFactory.class})
+@PrepareForTest({URLFactory.class})
 public class URLConnectionFactoryTest {
 
     private static final String SAMPLE_URL = "url";
-    private URL mockedURL;
-    private URLConnection mockedURLConnection;
-    private HttpURLConnection mockedHttpURLConnection;
-    private HttpsURLConnection mockedHttpsURLConnection;
-    
+    private static URLFactory mockedURLFactory;
+
+    @BeforeClass
+    public static void setUpClass() {
+        mockedURLFactory = mock(URLFactory.class);
+    }
+
     @Before
     public void setUp() throws Exception {
-        mockedURL = PowerMockito.mock(URL.class);
-        PowerMockito.whenNew(URL.class).withParameterTypes(String.class).withArguments(SAMPLE_URL).thenReturn(mockedURL);
-        mockedHttpURLConnection = mock(HttpURLConnection.class);
-        when(mockedURL.openConnection()).thenReturn(mockedHttpURLConnection);     
+        PowerMockito.mockStatic(URLFactory.class);
+        when(URLFactory.getInstance()).thenReturn(mockedURLFactory);
     }
 
-    @Test
-    public void getHttpURLConnection_opens_connection() throws HttpCommonException {
 
-        HttpURLConnection result = URLConnectionFactory.getInstance().getHttpURLConnection(SAMPLE_URL);
-        
-        assertThat(result, equalTo(mockedHttpURLConnection));
+    @Test(expected = HttpCommonException.class)
+    public void getHttpURLConnection_throws_httpcommonexception_when_urlfactory_does() throws HttpCommonException, IOException {
+        when(mockedURLFactory.getURLFromString(SAMPLE_URL)).thenThrow(HttpCommonException.class);
+
+        URLConnectionFactory.getInstance().getHttpURLConnection(SAMPLE_URL);
+
     }
-
-    @Test(expected=HttpCommonException.class)
-    public void getHttpURLConnection_throws_httpcommonexception_when_can_not_open_connection() throws HttpCommonException, IOException {
-        when(mockedURL.openConnection()).thenThrow(IOException.class);
-        
-        HttpURLConnection result = URLConnectionFactory.getInstance().getHttpURLConnection(SAMPLE_URL);
-        
-    }    
 }
