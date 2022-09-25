@@ -200,7 +200,8 @@ public class AbstractHttpClientTest {
     @Test
     public void makePostRequest_closes_input_stream() throws Exception {
         setInputStreamMocks();
-
+        setByteArrayOutputStreamMocks();
+        
         client.makePostRequest(SAMPLE_URL, null, null);
 
         verify(mockedInputStream).close();
@@ -225,7 +226,6 @@ public class AbstractHttpClientTest {
 
         verify(mockedOutputStream, atLeastOnce()).close();
     }
-
 
     @Test
     public void makeGetRequest_expands_compressed_response() throws Exception {
@@ -317,7 +317,6 @@ public class AbstractHttpClientTest {
         HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, ANOTHER_SAMPLE_BYTE_ARRAY);
 
     }
-
 
 }
 
