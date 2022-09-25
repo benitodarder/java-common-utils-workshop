@@ -6,7 +6,7 @@ import java.util.Objects;
  *
  * @author benitodarder
  */
-public class PostHttpRequest extends AbstractHttpRequest {
+public class PostRequest extends AbstractHttpRequest {
     
     private String body;
 
@@ -36,7 +36,7 @@ public class PostHttpRequest extends AbstractHttpRequest {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PostHttpRequest other = (PostHttpRequest) obj;
+        final PostRequest other = (PostRequest) obj;
         if (!Objects.equals(this.body, other.body)) {
             return false;
         }

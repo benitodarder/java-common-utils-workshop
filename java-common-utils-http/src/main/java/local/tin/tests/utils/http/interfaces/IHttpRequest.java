@@ -21,4 +21,7 @@ public interface IHttpRequest {
     
     public HttpMethod getHttpMethod();
     
+    public void setTLS12Enabled(boolean tls12Enabled);
+    
+    public boolean isTLS12Enabled();
 }

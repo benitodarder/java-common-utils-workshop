@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @author benitodarder
  */
-public class MultipartHttpRequest extends AbstractHttpRequest {
+public class MultipartRequest extends AbstractHttpRequest {
     
     private Collection<MultipartItem> multipartItems;
 
@@ -37,7 +37,7 @@ public class MultipartHttpRequest extends AbstractHttpRequest {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MultipartHttpRequest other = (MultipartHttpRequest) obj;
+        final MultipartRequest other = (MultipartRequest) obj;
         if (!Objects.equals(this.multipartItems, other.multipartItems)) {
             return false;
         }
