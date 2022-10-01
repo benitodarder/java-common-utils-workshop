@@ -22,5 +22,12 @@ public class URLFactoryTest {
         
         assertNotNull(URLFactory.getInstance().getURLFromString("http://localhost"));
         
+    }  
+    
+    @Test(expected = HttpCommonException.class)
+    public void getConnection_throws_http_common_execption_when_open_connection_does() throws HttpCommonException {
+        
+        URLFactory.getInstance().getConnection("aaaaaaaarrrgggg!!");
+        
     }    
 }

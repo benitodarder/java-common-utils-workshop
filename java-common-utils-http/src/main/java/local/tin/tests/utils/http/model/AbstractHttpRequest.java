@@ -1,5 +1,6 @@
 package local.tin.tests.utils.http.model;
 
+import java.util.HashMap;
 import java.util.Map;
 import local.tin.tests.utils.http.interfaces.IHttpRequest;
 
@@ -9,19 +10,19 @@ import local.tin.tests.utils.http.interfaces.IHttpRequest;
  */
 public abstract class AbstractHttpRequest implements IHttpRequest {
     
-    private String urlString;
+    private String uRLString;
     private Map<String, String> headers;
     private HttpMethod httpMethod;
-    private boolean tls12Enabled;
-
+    private HttpProtocol protocol;
+    
     @Override
     public void setURLString(String urlString) {
-        this.urlString = urlString;
+        this.uRLString = urlString;
     }
 
     @Override
     public String getURLString() {
-        return urlString;
+        return uRLString;
     }
 
     @Override
@@ -31,6 +32,9 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
 
     @Override
     public Map<String, String> getHeaders() {
+        if (headers == null) {
+            headers = new HashMap<>();
+        }
         return headers;
     }
 
@@ -45,14 +49,15 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
     }
 
     @Override
-    public void setTLS12Enabled(boolean tls12Enabled) {
-        this.tls12Enabled = tls12Enabled;
+    public HttpProtocol getProtocol() {
+        return protocol;
     }
 
     @Override
-    public boolean isTLS12Enabled() {
-        return tls12Enabled;
+    public void setProtocol(HttpProtocol httpProtocol) {
+        this.protocol = httpProtocol;
     }
+
 
     
 

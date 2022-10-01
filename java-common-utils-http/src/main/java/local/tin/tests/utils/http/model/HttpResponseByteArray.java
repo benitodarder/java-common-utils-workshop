@@ -2,6 +2,10 @@ package local.tin.tests.utils.http.model;
 
 
 public class HttpResponseByteArray extends AbstractHttpResponse {
+
+    public HttpResponseByteArray() {
+    }
+    
     
     public HttpResponseByteArray(int httpResponseCode, byte[] responseAsObject, String mediaType) {
         super(httpResponseCode, responseAsObject, mediaType);
@@ -13,7 +17,7 @@ public class HttpResponseByteArray extends AbstractHttpResponse {
      * @return byte array
      */
     public byte[] getResponseAsByteArray() {
-        return (byte[]) super.getObjectResponse(); 
+        return (byte[]) super.getResponseBody(); 
     }
     
     

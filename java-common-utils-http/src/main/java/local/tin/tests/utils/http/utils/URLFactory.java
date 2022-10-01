@@ -1,7 +1,9 @@
 package local.tin.tests.utils.http.utils;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import local.tin.tests.utils.http.model.HttpCommonException;
 
 /**
@@ -28,4 +30,13 @@ public class URLFactory {
             throw new HttpCommonException(ex);
         }
     }   
+     
+     public URLConnection getConnection(String urlSstring) throws HttpCommonException {
+        try {
+            URL url = getURLFromString(urlSstring);
+            return url.openConnection();
+        } catch (IOException ex) {
+            throw new HttpCommonException(ex);
+        }
+     }
  }

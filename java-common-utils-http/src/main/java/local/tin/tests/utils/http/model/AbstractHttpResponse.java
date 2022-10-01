@@ -1,5 +1,7 @@
 package local.tin.tests.utils.http.model;
 
+import java.io.Serializable;
+
 
 /**
  *
@@ -7,10 +9,13 @@ package local.tin.tests.utils.http.model;
  */
 public abstract class AbstractHttpResponse {
     
-    private final int httpResponseCode;
-    private final Object responseAsObject;
-    private final String mediaType;
+    private int httpResponseCode;
+    private Serializable responseBody;
+    private String contentType;
 
+    public AbstractHttpResponse() {
+    }
+    
     /**
      * Creates a new http response object with the given values.
      * 
@@ -18,21 +23,35 @@ public abstract class AbstractHttpResponse {
      * @param responseAsObject Object
      * @param mediaType  String
      */
-    protected AbstractHttpResponse(int httpResponseCode, Object responseAsObject, String mediaType) {
+    protected AbstractHttpResponse(int httpResponseCode, Serializable responseAsObject, String mediaType) {
         this.httpResponseCode = httpResponseCode;
-        this.responseAsObject = responseAsObject;
-        this.mediaType = mediaType;
+        this.responseBody = responseAsObject;
+        this.contentType = mediaType;
     }
 
-    public int getHttpResponseCode() {
+    public int getHttResponseCode() {
         return httpResponseCode;
     }
 
-    protected Object getObjectResponse() {
-        return responseAsObject;
+    protected Serializable getResponseBody() {
+        return responseBody;
     }
 
-    public String getMediaType() {
-        return mediaType;
+    public String getContentType() {
+        return contentType;
     }
+
+    public void setHttpResponseCode(int httpResponseCode) {
+        this.httpResponseCode = httpResponseCode;
+    }
+
+    public void setResponseBody(Serializable responseAsObject) {
+        this.responseBody = responseAsObject;
+    }
+
+    public void setContentType(String mediaType) {
+        this.contentType = mediaType;
+    }
+    
+    
 }

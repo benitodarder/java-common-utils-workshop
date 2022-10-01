@@ -121,9 +121,9 @@ public class AbstractHttpClientTest {
 
         HttpResponseByteArray result = client.makeGetRequest(SAMPLE_URL, null);
 
-        assertThat(result.getHttpResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
+        assertThat(result.getHttResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
         assertThat(result.getResponseAsByteArray(), equalTo(SAMPLE_BYTE_ARRAY));
-        assertThat(result.getMediaType(), equalTo(CONTENT_TYPE));
+        assertThat(result.getContentType(), equalTo(CONTENT_TYPE));
     }
 
     private void setByteArrayOutputStreamMocks() throws Exception {
@@ -171,9 +171,9 @@ public class AbstractHttpClientTest {
 
         HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, null);
 
-        assertThat(result.getHttpResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
+        assertThat(result.getHttResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
         assertThat(result.getResponseAsByteArray(), equalTo(SAMPLE_BYTE_ARRAY));
-        assertThat(result.getMediaType(), equalTo(CONTENT_TYPE));
+        assertThat(result.getContentType(), equalTo(CONTENT_TYPE));
     }
 
     @Test
