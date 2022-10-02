@@ -20,14 +20,14 @@ public class AbstractHttpRequestTest {
     }
     
     @Test
-    public void getProtocol_returns_expected_string_for_well_formed_string() {
+    public void getProtocol_returns_expected_string_for_well_formed_string() throws HttpCommonException {
         request.setURLString(PROTOCOL + AbstractHttpRequest.PROTOCOL_SERVER_SEPARATOR + URL);
         
         assertEquals(HttpProtocol.valueOf(PROTOCOL.toUpperCase()), request.getProtocol());
     }
 
     @Test(expected = HttpCommonException.class)
-    public void getProtocol_throws_exception_when_malformed_url() {
+    public void getProtocol_throws_exception_when_malformed_url() throws HttpCommonException {
         request.setURLString(PROTOCOL +  URL);
 
         request.getProtocol();

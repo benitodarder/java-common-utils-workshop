@@ -8,13 +8,13 @@ import java.util.Objects;
  */
 public class PostRequest extends AbstractHttpRequest {
     
-    private String body;
+    private byte[] body;
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(byte[] body) {
         this.body = body;
     }
 

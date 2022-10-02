@@ -52,6 +52,5 @@ public abstract class AbstractHttpResponse {
     public void setContentType(String mediaType) {
         this.contentType = mediaType;
     }
-    
-    
+
 }

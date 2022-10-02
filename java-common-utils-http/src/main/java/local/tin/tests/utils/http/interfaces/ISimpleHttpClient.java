@@ -6,8 +6,9 @@ import local.tin.tests.utils.http.model.HttpResponseByteArray;
 /**
  *
  * @author benitodarder
+ * @param <K>
  */
-public interface ISimpleHttpClient {
+public interface ISimpleHttpClient<K extends IHttpRequest> {
     
     /**
      * Makes a request to the given URL with the given headers.
@@ -16,5 +17,5 @@ public interface ISimpleHttpClient {
      * @return HttpResponseByteArray
      * @throws HttpCommonException
      */
-    public HttpResponseByteArray makeRequest(IHttpRequest httpRequest) throws HttpCommonException;
+    public HttpResponseByteArray makeRequest(K httpRequest) throws HttpCommonException;
 }
