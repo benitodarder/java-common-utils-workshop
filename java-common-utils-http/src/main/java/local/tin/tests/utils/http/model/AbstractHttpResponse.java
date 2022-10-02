@@ -29,7 +29,7 @@ public abstract class AbstractHttpResponse {
         this.contentType = mediaType;
     }
 
-    public int getHttResponseCode() {
+    public int getHttpResponseCode() {
         return httpResponseCode;
     }
 

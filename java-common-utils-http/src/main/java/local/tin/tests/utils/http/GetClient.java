@@ -8,14 +8,12 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.net.ssl.HttpsURLConnection;
 import local.tin.tests.utils.http.interfaces.IHttpRequest;
 import local.tin.tests.utils.http.interfaces.ISimpleHttpClient;
 import local.tin.tests.utils.http.model.HttpCommonException;
-import local.tin.tests.utils.http.model.HttpProtocol;
+import local.tin.tests.utils.http.model.HttpMethod;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
+import local.tin.tests.utils.http.utils.StreamUtils;
 import local.tin.tests.utils.http.utils.URLFactory;
 
 /**
@@ -24,6 +22,7 @@ import local.tin.tests.utils.http.utils.URLFactory;
  */
 public class GetClient implements ISimpleHttpClient {
 
+    public static final String CONTENT_ENCODING_COMPRESSED = "gzip";
     public static final int FIRST_SUCCESS_CODE = 200;
     public static final int LAST_SUCCESS_CODE = 299;
     public static final int EOF_FLAG = -1;
@@ -37,11 +36,7 @@ public class GetClient implements ISimpleHttpClient {
             uRLConnection.setRequestProperty(current.getKey(), current.getValue());
         }
         try {
-            if (httpRequest.getProtocol().equals(HttpProtocol.HTTPS)) {
-                ((HttpsURLConnection) uRLConnection).setRequestMethod(httpRequest.getHttpMethod().name());
-            } else {
-                getHttpURLConnection(uRLConnection).setRequestMethod(httpRequest.getHttpMethod().name());
-            }
+            getHttpURLConnection(uRLConnection).setRequestMethod(HttpMethod.GET.name());
         } catch (ProtocolException ex) {
             throw new HttpCommonException(ex);
         }
@@ -49,10 +44,13 @@ public class GetClient implements ISimpleHttpClient {
         InputStream effectiveStream = null;
         try {
             httpResponseByteArray.setHttpResponseCode(getHttpURLConnection(uRLConnection).getResponseCode());
-            if (httpResponseByteArray.getHttResponseCode() >= FIRST_SUCCESS_CODE && httpResponseByteArray.getHttResponseCode() <= LAST_SUCCESS_CODE) {
+            if (httpResponseByteArray.getHttpResponseCode() >= FIRST_SUCCESS_CODE && httpResponseByteArray.getHttpResponseCode() <= LAST_SUCCESS_CODE) {
                 effectiveStream = uRLConnection.getInputStream();
             } else {
                 effectiveStream = getHttpURLConnection(uRLConnection).getErrorStream();
+            }
+            if (CONTENT_ENCODING_COMPRESSED.equals(getHttpURLConnection(uRLConnection).getContentEncoding())) {
+                effectiveStream = StreamUtils.getInstance().getGZIPInputStream(effectiveStream);
             }
             httpResponseByteArray.setContentType(getHttpURLConnection(uRLConnection).getContentType());
             List<Byte> bytesList = new ArrayList<>();
@@ -81,6 +79,5 @@ public class GetClient implements ISimpleHttpClient {
     private HttpURLConnection getHttpURLConnection(URLConnection uRLConnection) {
         return (HttpURLConnection) uRLConnection;
     }
-
 
 }

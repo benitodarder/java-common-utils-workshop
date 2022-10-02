@@ -104,7 +104,7 @@ public class GenericHttpClientTest {
 
         HttpResponseByteArray result = client.makeGetRequest(SAMPLE_URL, null);
 
-        assertThat(result.getHttResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
+        assertThat(result.getHttpResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
         assertThat(result.getResponseAsByteArray(), equalTo(SAMPLE_BYTE_ARRAY));
         assertThat(result.getContentType(), equalTo(CONTENT_TYPE));
     }
@@ -154,7 +154,7 @@ public class GenericHttpClientTest {
 
         HttpResponseByteArray result = client.makePostRequest(SAMPLE_URL, null, null);
 
-        assertThat(result.getHttResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
+        assertThat(result.getHttpResponseCode(), equalTo(AbstractHttpClient.RESPONSE_CODE_SUCCESS));
         assertThat(result.getResponseAsByteArray(), equalTo(SAMPLE_BYTE_ARRAY));
         assertThat(result.getContentType(), equalTo(CONTENT_TYPE));
     }

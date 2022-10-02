@@ -210,7 +210,7 @@ public abstract class AbstractHttpClient {
 
             httResponseByteArray = getResponseFromConnection(connection);
 
-            LOGGER.log(Level.FINE,"'" + urlString + "' response code:" + httResponseByteArray.getHttResponseCode() + ", content type: " + httResponseByteArray.getContentType());
+            LOGGER.log(Level.FINE,"'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getContentType());
             return httResponseByteArray;
         } catch (IOException | HttpCommonException e) {
             logErrorAndDebug(UNEXPECTED_EXCEPTION, e);
@@ -264,7 +264,7 @@ public abstract class AbstractHttpClient {
             httpParameterStream.write(System.lineSeparator().getBytes());
             httpParameterStream.flush();
             httResponseByteArray = getResponseFromConnection(connection);
-            LOGGER.log(Level.FINE,"'" + urlString + "' response code:" + httResponseByteArray.getHttResponseCode() + ", content type: " + httResponseByteArray.getContentType());
+            LOGGER.log(Level.FINE,"'" + urlString + "' response code:" + httResponseByteArray.getHttpResponseCode() + ", content type: " + httResponseByteArray.getContentType());
             return httResponseByteArray;
         } catch (IOException | HttpCommonException e) {
             logErrorAndDebug(UNEXPECTED_EXCEPTION, e);

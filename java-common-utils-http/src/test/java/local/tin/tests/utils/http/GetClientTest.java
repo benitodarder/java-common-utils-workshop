@@ -8,12 +8,14 @@ import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 import javax.net.ssl.HttpsURLConnection;
 import local.tin.tests.utils.http.model.GetRequest;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpMethod;
 import local.tin.tests.utils.http.model.HttpProtocol;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
+import local.tin.tests.utils.http.utils.StreamUtils;
 import local.tin.tests.utils.http.utils.URLConnectionFactory;
 import local.tin.tests.utils.http.utils.URLFactory;
 import static org.junit.Assert.assertEquals;
@@ -38,7 +40,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @author benitodarder
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({URLFactory.class})
+@PrepareForTest({URLFactory.class, StreamUtils.class})
 public class GetClientTest {
 
     public static final String CONTENT_TYPE = "Content type";
@@ -50,15 +52,18 @@ public class GetClientTest {
     public static final String HEADER_VALUE_B = "value b";
     public static final byte[] SAMPLE_BYTE_ARRAY = {1, 3, 7, 15, 31, 63, 127};
     private static URLFactory mockedURLConnectionFactory;
+    private static StreamUtils mockedStreamUtils;
     private GetRequest request;
     private GetClient client;
     private HttpsURLConnection mockedHttpsURLConnection;
     private Map<String, String> headers;
     private InputStream mockedInputStream;
+    private GZIPInputStream mockedGZIPInputStream;
 
     @BeforeClass
     public static void setUpClass() {
         mockedURLConnectionFactory = mock(URLFactory.class);
+        mockedStreamUtils = mock(StreamUtils.class);
 
     }
 
@@ -66,6 +71,8 @@ public class GetClientTest {
     public void setUp() throws HttpCommonException, IOException {
         PowerMockito.mockStatic(URLFactory.class);
         when(URLFactory.getInstance()).thenReturn(mockedURLConnectionFactory);
+        PowerMockito.mockStatic(StreamUtils.class);
+        when(StreamUtils.getInstance()).thenReturn(mockedStreamUtils);
         reset(mockedURLConnectionFactory);
         client = new GetClient();
         request = new GetRequest();
@@ -73,11 +80,11 @@ public class GetClientTest {
         mockedHttpsURLConnection = mock(HttpsURLConnection.class);
         when(mockedURLConnectionFactory.getConnection(SAMPLE_URL)).thenReturn(mockedHttpsURLConnection);
         request.setHtppMethod(HttpMethod.GET);
-        request.setProtocol(HttpProtocol.HTTPS);
         mockedInputStream = mock(InputStream.class);
         when(mockedHttpsURLConnection.getInputStream()).thenReturn(mockedInputStream);
         when(mockedInputStream.read()).thenReturn(GetClient.EOF_FLAG);
         when(mockedHttpsURLConnection.getResponseCode()).thenReturn(SAMPLE_RESPONSE_CODE);
+        mockedGZIPInputStream = mock(GZIPInputStream.class);
     }
 
     @Test
@@ -126,7 +133,6 @@ public class GetClientTest {
         when(mockedHttpURLConnection.getResponseCode()).thenReturn(SAMPLE_RESPONSE_CODE);
         when(mockedURLConnectionFactory.getConnection(SAMPLE_URL)).thenReturn(mockedHttpURLConnection);
         when(mockedHttpURLConnection.getInputStream()).thenReturn(mockedInputStream);
-        request.setProtocol(HttpProtocol.HTTP);
 
         client.makeRequest(request);
 
@@ -171,7 +177,7 @@ public class GetClientTest {
 
         HttpResponseByteArray response = client.makeRequest(request);
 
-        assertEquals(SAMPLE_RESPONSE_CODE, response.getHttResponseCode());
+        assertEquals(SAMPLE_RESPONSE_CODE, response.getHttpResponseCode());
     }
 
     @Test
@@ -220,13 +226,55 @@ public class GetClientTest {
 
         assertTrue(Arrays.equals(SAMPLE_BYTE_ARRAY, response.getResponseAsByteArray()));
     }
-    
+
     @Test(expected = HttpCommonException.class)
     public void makeRequest_throws_httpcommonexception_when_closing_inputstream_throws_ioexception() throws IOException, HttpCommonException {
         when(mockedInputStream.read()).thenReturn(GetClient.EOF_FLAG);
         PowerMockito.doThrow(new IOException()).when(mockedInputStream).close();
-        
+
         HttpResponseByteArray response = client.makeRequest(request);
 
-    }    
+    }
+
+    @Test
+    public void makeRequest_returns_compressed_connection_stream() throws IOException, HttpCommonException {
+        when(mockedHttpsURLConnection.getContentEncoding()).thenReturn(GetClient.CONTENT_ENCODING_COMPRESSED);
+        when(mockedStreamUtils.getGZIPInputStream(mockedInputStream)).thenReturn(mockedGZIPInputStream);
+        when(mockedGZIPInputStream.read())
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[0])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[1])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[2])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[3])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[4])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[5])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[6])
+                .thenReturn(GetClient.EOF_FLAG);
+
+        HttpResponseByteArray response = client.makeRequest(request);
+
+        verify(mockedStreamUtils).getGZIPInputStream(mockedInputStream);
+    }
+
+    @Test
+    public void makeRequest_returns_compressed_connection_error_stream_when_not_success_response_code() throws IOException, HttpCommonException {
+        when(mockedHttpsURLConnection.getInputStream()).thenReturn(null);
+        when(mockedHttpsURLConnection.getErrorStream()).thenReturn(mockedInputStream);
+        when(mockedHttpsURLConnection.getResponseCode()).thenReturn(GetClient.LAST_SUCCESS_CODE + 1);
+        when(mockedHttpsURLConnection.getContentEncoding()).thenReturn(GetClient.CONTENT_ENCODING_COMPRESSED);
+        when(mockedStreamUtils.getGZIPInputStream(mockedInputStream)).thenReturn(mockedGZIPInputStream);
+        when(mockedGZIPInputStream.read())
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[0])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[1])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[2])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[3])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[4])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[5])
+                .thenReturn((int) SAMPLE_BYTE_ARRAY[6])
+                .thenReturn(GetClient.EOF_FLAG);
+
+        HttpResponseByteArray response = client.makeRequest(request);
+
+        verify(mockedStreamUtils).getGZIPInputStream(mockedInputStream);
+    }
+
 }

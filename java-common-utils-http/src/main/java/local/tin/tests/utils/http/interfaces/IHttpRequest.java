@@ -1,6 +1,7 @@
 package local.tin.tests.utils.http.interfaces;
 
 import java.util.Map;
+import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpProtocol;
 import local.tin.tests.utils.http.model.HttpMethod;
 
@@ -21,8 +22,6 @@ public interface IHttpRequest {
     public void setHtppMethod(HttpMethod httpMethod);
     
     public HttpMethod getHttpMethod();
-      
-    public void setProtocol(HttpProtocol hTTPProtocol);
     
-    public HttpProtocol getProtocol();
+    public HttpProtocol getProtocol() throws HttpCommonException;
 }

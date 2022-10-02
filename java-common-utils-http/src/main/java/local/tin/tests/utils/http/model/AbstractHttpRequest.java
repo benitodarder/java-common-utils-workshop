@@ -9,12 +9,13 @@ import local.tin.tests.utils.http.interfaces.IHttpRequest;
  * @author benitodarder
  */
 public abstract class AbstractHttpRequest implements IHttpRequest {
-    
+
+    public static final String PROTOCOL_SERVER_SEPARATOR = "://";
     private String uRLString;
     private Map<String, String> headers;
     private HttpMethod httpMethod;
     private HttpProtocol protocol;
-    
+
     @Override
     public void setURLString(String urlString) {
         this.uRLString = urlString;
@@ -49,16 +50,12 @@ public abstract class AbstractHttpRequest implements IHttpRequest {
     }
 
     @Override
-    public HttpProtocol getProtocol() {
-        return protocol;
+    public HttpProtocol getProtocol() throws HttpCommonException {
+        try {
+            return HttpProtocol.valueOf(uRLString.substring(0, uRLString.indexOf(PROTOCOL_SERVER_SEPARATOR)).toUpperCase());
+        } catch (IndexOutOfBoundsException | NullPointerException ex) {
+            throw new HttpCommonException(ex);
+        }
     }
-
-    @Override
-    public void setProtocol(HttpProtocol httpProtocol) {
-        this.protocol = httpProtocol;
-    }
-
-
-    
 
 }

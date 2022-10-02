@@ -6,6 +6,12 @@ package local.tin.tests.utils.http.model;
  */
 public enum HttpProtocol {
     
-    HTTP,
-    HTTPS;
+    HTTP("http"),
+    HTTPS("https");
+    
+    public final String protocol;
+
+    private HttpProtocol(String protocol) {
+        this.protocol = protocol;
+    }    
 }
