@@ -5,13 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import local.tin.tests.utils.file.FileUtils;
-import local.tin.tests.utils.http.GenericHttpClient;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpResponseByteArray;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import local.tin.tests.utils.http.model.PostRequest;
-import local.tin.tests.utils.http.model.HttpProtocol;
 
 /**
  *

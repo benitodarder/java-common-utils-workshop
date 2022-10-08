@@ -53,15 +53,15 @@ public class Multipart {
             }
             multipartRequest.setURLString(properties.getProperty(PROPERTY_NAME_URL));
             MultipartItem multipartItem = new MultipartItem();
-            multipartItem.setContentType("Content-Type: text/plain; charset=us-ascii");
-            multipartItem.setContentTransferEncoding("Content-Transfer-Encoding: 7bit");
-            multipartItem.setContentDisposition("Content-Disposition: form-data; name=\"msg\"");
+            multipartItem.setContentType("text/plain; charset=us-ascii");
+            multipartItem.setContentTransferEncoding("7bit");
+            multipartItem.setContentDisposition("form-data; name=\"msg\"");
             multipartItem.setInputStream(new ByteArrayInputStream(properties.getProperty(PROPERTY_NAME_PARAM).getBytes()));
             multipartRequest.getMultipartItems().add(multipartItem);
             multipartItem = new MultipartItem();
-            multipartItem.setContentType("Content-Type: application/octet-stream; name=" + properties.getProperty(PROPERTY_NAME_FILE));
-            multipartItem.setContentTransferEncoding("Content-Transfer-Encoding: binary");
-            multipartItem.setContentDisposition("Content-Disposition: form-data; name=\"file\"; filename=\"" + properties.getProperty(PROPERTY_NAME_FILE) + "\"");
+            multipartItem.setContentType("application/octet-stream; name=" + properties.getProperty(PROPERTY_NAME_FILE));
+            multipartItem.setContentTransferEncoding("binary");
+            multipartItem.setContentDisposition("form-data; name=\"file\"; filename=\"" + properties.getProperty(PROPERTY_NAME_FILE) + "\"");
             multipartItem.setInputStream(new ByteArrayInputStream(FileUtils.getInstance().getFileAsString(properties.getProperty(PROPERTY_NAME_FILE)).getBytes()));
             multipartRequest.getMultipartItems().add(multipartItem);
             local.tin.tests.utils.http.MultipartClient getClient = new local.tin.tests.utils.http.MultipartClient();

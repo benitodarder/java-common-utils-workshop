@@ -3,7 +3,6 @@ package local.tin.tests.utils.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import static local.tin.tests.utils.http.AbstractHttpClient.UNEXPECTED_EXCEPTION;
 import local.tin.tests.utils.http.model.HttpCommonException;
 import local.tin.tests.utils.http.model.HttpMethod;
 import local.tin.tests.utils.http.model.MultipartItem;
@@ -16,18 +15,23 @@ import local.tin.tests.utils.http.utils.MultipartUtils;
  */
 public class MultipartClient extends AbstractClient<MultipartRequest> {
 
+    public static final String UNEXPECTED_EXCEPTION = "Unexpected Exception: ";
+    public static final String HEADER_VALUE_SEPARATOR = ": ";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
+    public static final String CONTENT_DISPOSITION = "Content-Disposition";
 
     @Override
     protected MultipartRequest prepareRequest(MultipartRequest httpRequest) throws HttpCommonException {
         String boundary = MultipartUtils.getInstance().getBoundary();
-        httpRequest.getHeaders().put("Content-Type", httpRequest.getHeaders().get("Content-Type") + "; boundary=\"" + boundary + "\"");
+        httpRequest.getHeaders().put(CONTENT_TYPE, httpRequest.getHeaders().get(CONTENT_TYPE) + "; boundary=\"" + boundary + "\"");
         httpRequest.setBoundary(boundary);
         return httpRequest;
     }
 
     @Override
     protected void writeContent(HttpURLConnection httpURLConnection, MultipartRequest httpRequest) throws HttpCommonException {
-       OutputStream httpParameterStream = null;
+        OutputStream httpParameterStream = null;
         try {
             httpURLConnection.setUseCaches(false);
             httpParameterStream = httpURLConnection.getOutputStream();
@@ -36,11 +40,11 @@ public class MultipartClient extends AbstractClient<MultipartRequest> {
                 httpParameterStream.write(MultipartUtils.BOUNDARY_END.getBytes());
                 httpParameterStream.write(httpRequest.getBoundary().getBytes());
                 httpParameterStream.write(System.lineSeparator().getBytes());
-                httpParameterStream.write(multipartItem.getContentType().getBytes());
+                httpParameterStream.write((CONTENT_TYPE + HEADER_VALUE_SEPARATOR + multipartItem.getContentType()).getBytes());
                 httpParameterStream.write(System.lineSeparator().getBytes());
-                httpParameterStream.write(multipartItem.getContentTransferEncoding().getBytes());
+                httpParameterStream.write((CONTENT_TRANSFER_ENCODING + HEADER_VALUE_SEPARATOR + multipartItem.getContentTransferEncoding()).getBytes());
                 httpParameterStream.write(System.lineSeparator().getBytes());
-                httpParameterStream.write(multipartItem.getContentDisposition().getBytes());
+                httpParameterStream.write((CONTENT_DISPOSITION + HEADER_VALUE_SEPARATOR + multipartItem.getContentDisposition()).getBytes());
                 httpParameterStream.write(System.lineSeparator().getBytes());
                 if (multipartItem.getFormField() != null) {
                     httpParameterStream.write(System.lineSeparator().getBytes());
@@ -73,7 +77,8 @@ public class MultipartClient extends AbstractClient<MultipartRequest> {
                     throw new HttpCommonException(ex);
                 }
             }
-        }    }
+        }
+    }
 
     @Override
     protected HttpMethod getHttpMethod() {
