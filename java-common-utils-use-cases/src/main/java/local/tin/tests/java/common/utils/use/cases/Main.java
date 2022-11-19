@@ -3,7 +3,6 @@ package local.tin.tests.java.common.utils.use.cases;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author benitodarder
@@ -24,6 +23,9 @@ public class Main {
         LOGGER.log(Level.INFO, "\tlocal.tin.tests.java.common.utils.use.cases.aws.iam.ListAccessKeys <Properties file>");
         LOGGER.log(Level.INFO, "\tlocal.tin.tests.java.common.utils.use.cases.aws.s3.GetObject <Properties file>");
         LOGGER.log(Level.INFO, "\tlocal.tin.tests.java.common.utils.use.cases.aws.s3.PutObject <Properties file>");
+        LOGGER.log(Level.INFO, "\tlocal.tin.tests.java.common.utils.use.cases.http.Get <Properties file>");
+        LOGGER.log(Level.INFO, "\tlocal.tin.tests.java.common.utils.use.cases.http.Post <Properties file>");
+        LOGGER.log(Level.INFO, "\tlocal.tin.tests.java.common.utils.use.cases.http.Multipart <Properties file>");
     }
 
 }

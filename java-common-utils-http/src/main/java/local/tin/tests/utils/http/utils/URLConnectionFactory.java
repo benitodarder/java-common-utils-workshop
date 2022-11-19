@@ -2,7 +2,6 @@ package local.tin.tests.utils.http.utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -34,7 +33,7 @@ public class URLConnectionFactory {
     public HttpURLConnection getHttpURLConnection(String urlString) throws HttpCommonException {
         HttpURLConnection httpURLConnection;
         try {
-            URL url = getURLFromString(urlString);
+            URL url = URLFactory.getInstance().getURLFromString(urlString);
             httpURLConnection = (HttpURLConnection) url.openConnection();
         } catch (IOException ex) {
             throw new HttpCommonException(ex);
@@ -42,14 +41,11 @@ public class URLConnectionFactory {
         return httpURLConnection;
     }
 
-    private URL getURLFromString(String urlString) throws MalformedURLException {
-        return new URL(urlString);
-    }
 
     public HttpsURLConnection getHttpsURLConnectionTLS12(String urlString) throws HttpCommonException {
         HttpsURLConnection httpsURLConnection;
         try {
-            URL url = getURLFromString(urlString);
+            URL url = URLFactory.getInstance().getURLFromString(urlString);
             httpsURLConnection = (HttpsURLConnection) url.openConnection();
             SSLContext sslContext = SSLContext.getInstance(TLS_1_2);
             sslContext.init(null, null, new SecureRandom());
